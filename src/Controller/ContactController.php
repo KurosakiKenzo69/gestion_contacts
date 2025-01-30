@@ -11,27 +11,39 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ContactRepository;
+use App\Form\ContactType;
+use Symfony\Component\Routing\Annotation\Route;
+
 class ContactController extends AbstractController
 {
-    public function create(Request $request, EntityManagerInterface $em)
+    #[Route('/creer/contact', name: 'app_contact')]
+    public function create(Request $request): Response
     {
         $contact = new Contact();
-        $form = $this->createFormBuilder($contact)
-            ->add('nom', TextType::class)
-            ->add('prenom', TextType::class)
-            ->add('email', TextType::class)
-            ->add('telephone', TextType::class)
-            ->add('save', SubmitType::class, ['label' => 'Créer un contact'])
-            ->getForm();
-
+        $form = $this->createForm(ContactType::class, $contact);
+        
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
-            $contactRepository->save($contact, true);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($contact);
+            $entityManager->flush();
+            
+            return $this->redirectToRoute('app_contact_list');
         }
-
+        
         return $this->render('contact/create.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('liste/contacts', name: 'app_contact_list')]
+    public function index(ContactRepository $contactRepository): Response
+    {
+        $contacts = $contactRepository->findAll();
+        
+        return $this->render('contact/list.html.twig', [
+            'contacts' => $contacts
         ]);
     }
 }

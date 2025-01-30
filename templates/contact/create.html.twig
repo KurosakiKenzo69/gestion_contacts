@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un contact{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Créer un nouveau contact</h1>
+        
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
