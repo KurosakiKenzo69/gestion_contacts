@@ -3,7 +3,8 @@
 {% block title %}Liste des contacts{% endblock %}
 
 {% block body %}
-    <div class="container mt-10">
+    <div class="container">
+    <a href=""><img src="{{asset('img/left-arrow.png')}}" alt="retour" class="arrow"></a>
         <h1>Liste des contacts</h1>
         
         {% if contacts is empty %}
@@ -26,9 +27,10 @@
                         <td>{{ contact.prenom }}</td>
                         <td>{{ contact.email }}</td>
                         <td>{{ contact.telephone }}</td>
-                        {# <td>
-                            
-                        </td> #}
+                        <td class="actions">
+                            <span><img src="{{ asset('img/pencil.png') }}" alt="edit" class="icon"></span>
+                            <span><img src="{{ asset('img/delete.png') }}" alt="delete" class="icon"></span>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -4,9 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactController extends AbstractController
 {
     #[Route('/creer/contact', name: 'app_contact')]
-    public function create(Request $request): Response
+    public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
@@ -25,10 +22,10 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($contact);
             $entityManager->flush();
             
+            $this->addFlash('success', 'Le contact a été ajouté avec succès !');
             return $this->redirectToRoute('app_contact_list');
         }
         
@@ -44,6 +41,25 @@ class ContactController extends AbstractController
         
         return $this->render('contact/list.html.twig', [
             'contacts' => $contacts
+        ]);
+    }
+
+    #[Route('/modifier/contact/{id}', name: 'app_contact_edit')]
+    public function edit(Contact $contact, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ContactType::class, $contact);
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            
+            $this->addFlash('success', 'Le contact a été modifié avec succès !');
+            return $this->redirectToRoute('app_contact_list');
+        }
+        
+        return $this->render('contact/edit.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 }
