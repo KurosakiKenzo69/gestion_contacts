@@ -16,11 +16,6 @@ class ContactRepository extends ServiceEntityRepository
         parent::__construct($registry, Contact::class);
     }
 
-    public function findAll(): array
-    {
-        return parent::findAll();
-    }
-
     public function delete(Contact $contact): void
     {
         $this->getEntityManager()->remove($contact);
@@ -38,17 +33,24 @@ class ContactRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    public function findContactById(int $id): ?Contact
+    public function orderByField($field, $direction)
     {
-        return $this->find($id);
+        $allowedFields = ['nom', 'prenom', 'email'];
+
+        if (!in_array($field, $allowedFields)) {
+            $field = 'nom'; // Valeur par défaut
+        }
+
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.' . $field, $direction)
+            ->getQuery()
+            ->getResult();
     }
 
     public function orderByName(): array
     {
         return $this->findBy([], ['nom' => 'ASC']);
     }
-
-    // Dans le Repository de Contact
     public function countAllContacts()
     {
         return $this->createQueryBuilder('c')

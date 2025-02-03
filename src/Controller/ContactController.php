@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ContactController extends AbstractController
 {
+    // Créer un contact
     #[Route('/creer/contact', name: 'app_contact_create')]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -35,24 +36,33 @@ class ContactController extends AbstractController
         ]);
     }
 
+    // Lister les contacts
     #[Route('/', name: 'app_contact_list')]
     public function index(ContactRepository $contactRepository, Request $request): Response
     {
-        $contacts = $contactRepository->orderByName();
-        $count = $contactRepository->countAllContacts();
-
         $search = $request->query->get('q');
+        $sort = $request->query->get('sort', 'nom'); // Tri par défaut : nom
+        $direction = $request->query->get('direction', 'asc');
 
+        // Si une recherche est faite, utiliser search(), sinon récupérer tous les contacts triés
         if ($search) {
             $contacts = $contactRepository->search($search);
+        } else {
+            $contacts = $contactRepository->orderByField($sort, $direction);
         }
+
+        $count = $contactRepository->countAllContacts();
 
         return $this->render('contact/list.html.twig', [
             'contacts' => $contacts,
-            'count' => $count
+            'count' => $count,
+            'sort' => $sort,
+            'direction' => $direction,
         ]);
     }
 
+
+    // Suppression d'un contact
     #[Route('/supprimer/contact/{id}', name: 'app_contact_delete')]
     public function delete(int $id, ContactRepository $contactRepository): Response
     {
@@ -62,10 +72,12 @@ class ContactController extends AbstractController
         }
         
         $contactRepository->delete($contact);
+        $this->addFlash('success', 'Le contact a été supprimé !');
         
         return $this->redirectToRoute('app_contact_list');
     }
 
+    // Modifier un contact
     #[Route('/modifier/contact/{id}', name: 'app_contact_edit')]
     public function edit(int $id, Request $request, ContactRepository $contactRepository): Response
     {

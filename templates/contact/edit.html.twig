@@ -6,14 +6,17 @@
 <div class="container mt-5">
     <div class="card shadow-sm">
         <div class="card-header bg-dark text-white text-center">
-            <h2>Créer un nouveau contact</h2>
+            <h2>Modifier le contact</h2>
         </div>
-    <a href="{{ path('app_contact_list') }}" class="link-underline link-underline-opacity-0 link-dark">
-        <img src="{{ asset('img/left-arrow.png') }}" alt="Supprimer" style="width: 25px; margin-right: 5px;">
-        Retour à la liste
-    </a>
 
-    <div class="card shadow p-4">
+        {# Retour #}
+        <div class="sticky-top ms-3 mt-3">
+            <a href="{{ path('app_contact_list') }}" class="link-dark link-underline link-underline-opacity-0 d-inline-flex align-items-center">
+                <img src="{{ asset('img/left-arrow.png') }}" alt="Retour" style="width: 20px; margin-right: 5px;">
+                Retour à la liste
+            </a>
+        </div>
+
         <div class="card-body">
             {{ form_start(form) }}
                 <div class="row">
@@ -21,32 +24,30 @@
                         {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
                     </div>
-
                     <div class="col-md-6 mb-3">
                         {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
                     </div>
-
                     <div class="col-md-6 mb-3">
                         {{ form_label(form.telephone, 'Téléphone', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.telephone, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
-
                 <div class="text-center mt-4">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save"></i> Modifier
                     </button>
+                    <a href="{{ path('app_contact_list') }}" class="btn btn-danger">
+                        <i class="fas fa-arrow-left"></i> Annuler
+                    </a>
                 </div>
             {{ form_end(form) }}
-
         </div>
     </div>
 </div>
