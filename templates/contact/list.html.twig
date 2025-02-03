@@ -1,40 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des contacts{% endblock %}
+{% block title %}Accueil - Liste des contacts{% endblock %}
 
 {% block body %}
-    <div class="container">
-    <a href=""><img src="{{asset('img/left-arrow.png')}}" alt="retour" class="arrow"></a>
-        <h1>Liste des contacts</h1>
-        
+
+    <div class="container d-flex flex-column align-items-start vh-100" style="margin-top: 80px;">
+    {# bouton et titre en ligne #}
+        <div class="d-flex justify-content-between align-items-center w-100">
+            <h1 class="fw-bold">Mes contacts</h1>
+            <a href="{{ path('app_contact_create') }}" class="btn btn-primary my-3">+ Ajouter un contact</a>
+        </div>
+        <h5> {{count}} contact(s) enregistrés </h5>
+        {# <input type="search" name="search-contact" id="search-contact" class="form-control" placeholder="Rechercher un contact" style="width: 300px;"> #}
+
+<form method="GET" action="{{ path('app_contact_list') }}" class="d-flex">
+            <input type="text" name="q" class="form-control me-2" placeholder="Rechercher un contact..." value="{{ app.request.get('q') }}">
+            <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+        </form>
         {% if contacts is empty %}
-        <h1>Aucun contact trouvé</h1>
+            <h3 class="text-center text-muted">Aucun contact trouvé</h3>
         {% else %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Email</th>
-                    <th>Téléphone</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for contact in contacts %}
+            <table class="table text-center mt-3 table-striped table-bordered table-hover">
+                <thead>
                     <tr>
-                        <td>{{ contact.nom }}</td>
-                        <td>{{ contact.prenom }}</td>
-                        <td>{{ contact.email }}</td>
-                        <td>{{ contact.telephone }}</td>
-                        <td class="actions">
-                            <span><img src="{{ asset('img/pencil.png') }}" alt="edit" class="icon"></span>
-                            <span><img src="{{ asset('img/delete.png') }}" alt="delete" class="icon"></span>
-                        </td>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Actions</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for contact in contacts %}
+                        <tr>
+                            <td>{{ contact.nom }}</td>
+                            <td>{{ contact.prenom }}</td>
+                            <td>{{ contact.email }}</td>
+                            <td>{{ contact.telephone }}</td>
+                            <td>
+                                <a href="{{ path('app_contact_edit', {'id': contact.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                                <a href="{{ path('app_contact_delete', {'id': contact.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Supprimer ce contact ?')">Supprimer</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
     </div>
+
+    <script>
+        setTimeout(() => {
+            let flashMessage = document.getElementById("flash-message");
+            if (flashMessage) {
+                flashMessage.style.transition = "opacity 0.5s ease-out";
+                flashMessage.style.opacity = "0";
+                setTimeout(() => flashMessage.remove(), 500);
+            }
+        }, 3000);
+    </script>
 {% endblock %}

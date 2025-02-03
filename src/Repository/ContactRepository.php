@@ -38,4 +38,31 @@ class ContactRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    public function findContactById(int $id): ?Contact
+    {
+        return $this->find($id);
+    }
+
+    public function orderByName(): array
+    {
+        return $this->findBy([], ['nom' => 'ASC']);
+    }
+
+    // Dans le Repository de Contact
+    public function countAllContacts()
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function search(string $search): array
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.nom LIKE :search OR c.prenom LIKE :search OR c.email LIKE :search')
+            ->setParameter('search', '%' . $search . '%')
+            ->getQuery()
+            ->getResult();
+    }
 }

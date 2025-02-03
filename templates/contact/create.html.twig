@@ -3,10 +3,36 @@
 {% block title %}Créer un contact{% endblock %}
 
 {% block body %}
-    <div class="form-container">
-        <h1 class="form-title">Créer un nouveau contact</h1>
-        {{ form_start(form) }}
-            {{ form_widget(form) }}
-        {{ form_end(form) }}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white text-center">
+            <h2>Créer un nouveau contact</h2>
+        </div>
+        {# retour #}
+        <div class="sticky-top ms-3 mt-3">
+        <a href="{{ path('app_contact_list') }}" class="link-dark link-underline link-underline-opacity-0">
+            <img src="{{ asset('img/left-arrow.png') }}" alt="Retour" style="width: 20px; margin-right: 5px;">
+            Retour à la liste
+        </a>
+        </div>
+        <div class="card-body">
+            {{ form_start(form) }}
+                {% for field in form %}
+                    <div class="mb-3">
+                        {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                {% endfor %}
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    <a href="{{ path('app_contact_list') }}" class="btn btn-danger">
+                        <i class="fas fa-arrow-left"></i> Annuler
+                    </a>
+                </div>
+            {{ form_end(form) }}
+        </div>
     </div>
+</div>
 {% endblock %}

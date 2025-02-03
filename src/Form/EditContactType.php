@@ -6,17 +6,43 @@ use App\Entity\Contact;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class EditContactType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('prenom')
-            ->add('email')
-            ->add('telephone')
-        ;
+        ->add('nom', TextType::class, [
+            'attr' => ['class' => 'form-control'],
+            'label' => 'Nom'
+        ])
+        ->add('prenom', TextType::class, [
+            'attr' => ['class' => 'form-control'],
+            'label' => 'Prénom'
+        ])
+        ->add('email', EmailType::class, [
+            'attr' => ['class' => 'form-control'],
+            'label' => 'Email'
+        ])
+        ->add('telephone', TextType::class, [
+            'attr' => ['class' => 'form-control'],
+            'label' => 'Téléphone'
+        ]);
+        // ->add('submit', SubmitType::class, [
+        //     'label' => 'Modifier',
+        //     'attr' => ['class' => 'btn-submit'],
+            
+        // ])
+
+        // ->add('stop', SubmitType::class, [
+        //     'label' => 'Supprimer',
+        //     'attr' => ['class' => 'btn-stop'],
+            
+        // ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

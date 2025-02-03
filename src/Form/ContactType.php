@@ -30,12 +30,7 @@ class ContactType extends AbstractType
         ->add('telephone', TextType::class, [
             'attr' => ['class' => 'form-control'],
             'label' => 'Téléphone'
-        ])
-        ->add('submit', SubmitType::class, [
-            'label' => 'Envoyer',
-            'attr' => ['class' => 'btn-submit']
         ]);
-
     }
 
     public function configureOptions(OptionsResolver $resolver): void
