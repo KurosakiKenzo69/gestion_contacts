@@ -28,17 +28,19 @@ class ContactRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    // modification du contact
     public function update(Contact $contact): void
     {
         $this->getEntityManager()->flush();
     }
 
+    // trier les contacts par un champ et un ordre donné
     public function orderByField($field, $direction)
     {
         $allowedFields = ['nom', 'prenom', 'email'];
 
         if (!in_array($field, $allowedFields)) {
-            $field = 'nom'; // Valeur par défaut
+            $field = 'nom';
         }
 
         return $this->createQueryBuilder('c')
@@ -47,10 +49,13 @@ class ContactRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    // trier les contacts par nom
     public function orderByName(): array
     {
         return $this->findBy([], ['nom' => 'ASC']);
     }
+
+    // compter tous les contacts
     public function countAllContacts()
     {
         return $this->createQueryBuilder('c')
@@ -59,6 +64,7 @@ class ContactRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    // recherche de contact
     public function search(string $search): array
     {
         return $this->createQueryBuilder('c')

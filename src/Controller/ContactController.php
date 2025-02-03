@@ -23,6 +23,7 @@ class ContactController extends AbstractController
         
         $form->handleRequest($request);
         
+        // vérifier si le formulaire a été soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($contact);
             $entityManager->flush();
@@ -41,7 +42,7 @@ class ContactController extends AbstractController
     public function index(ContactRepository $contactRepository, Request $request): Response
     {
         $search = $request->query->get('q');
-        $sort = $request->query->get('sort', 'nom'); // Tri par défaut : nom
+        $sort = $request->query->get('sort', 'nom');
         $direction = $request->query->get('direction', 'asc');
 
         // Si une recherche est faite, utiliser search(), sinon récupérer tous les contacts triés
